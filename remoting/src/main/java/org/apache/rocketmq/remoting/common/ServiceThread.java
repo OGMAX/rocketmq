@@ -26,20 +26,40 @@ public abstract class ServiceThread implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.ROCKETMQ_REMOTING);
 
     private static final long JOIN_TIME = 90 * 1000;
+
+    /**
+     * 内部线程
+     */
     protected final Thread thread;
+    /**
+     * 是否调用
+     */
     protected volatile boolean hasNotified = false;
+    /**
+     * 线程是否已经停止了
+     */
     protected volatile boolean stopped = false;
 
     public ServiceThread() {
         this.thread = new Thread(this, this.getServiceName());
     }
 
+    /**
+     * 获取service的名字
+     * @return
+     */
     public abstract String getServiceName();
 
+    /**
+     * 开启线程
+     */
     public void start() {
         this.thread.start();
     }
 
+    /**
+     * 关闭线程
+     */
     public void shutdown() {
         this.shutdown(false);
     }
@@ -60,6 +80,7 @@ public abstract class ServiceThread implements Runnable {
             }
 
             long beginTime = System.currentTimeMillis();
+            // 超时join
             this.thread.join(this.getJointime());
             long eclipseTime = System.currentTimeMillis() - beginTime;
             log.info("join thread " + this.getServiceName() + " eclipse time(ms) " + eclipseTime + " "
