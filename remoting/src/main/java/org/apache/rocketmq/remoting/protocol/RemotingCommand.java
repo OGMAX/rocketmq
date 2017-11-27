@@ -85,7 +85,7 @@ public class RemotingCommand {
     }
 
     /**
-     * 状态码
+     * 业务代码
      */
     private int code;
     /**
@@ -152,6 +152,7 @@ public class RemotingCommand {
      * 创建通用响应命令
      * 注意:
      * 初始化代码为错误
+     *
      * @param classHeader
      * @return
      */
@@ -161,8 +162,9 @@ public class RemotingCommand {
 
     /**
      * 创建响应命令
-     * @param code 状态码
-     * @param remark 备注
+     *
+     * @param code        状态码
+     * @param remark      备注
      * @param classHeader 头部
      * @return
      */
@@ -194,6 +196,7 @@ public class RemotingCommand {
 
     /**
      * 创建响应命令(无头部)
+     *
      * @param code
      * @param remark
      * @return
@@ -204,6 +207,7 @@ public class RemotingCommand {
 
     /**
      * 传输解码
+     *
      * @param array
      * @return
      */
@@ -214,6 +218,7 @@ public class RemotingCommand {
 
     /**
      * 传输解码
+     *
      * @param byteBuffer
      * @return
      */
@@ -240,6 +245,7 @@ public class RemotingCommand {
 
     /**
      * 获取传输头部长度(前24位)
+     *
      * @param length
      * @return
      */
@@ -249,6 +255,7 @@ public class RemotingCommand {
 
     /**
      * 头部解码
+     *
      * @param headerData
      * @param type
      * @return
@@ -272,6 +279,7 @@ public class RemotingCommand {
 
     /**
      * 传输协议类型(高8位)
+     *
      * @param source
      * @return
      */
@@ -281,6 +289,7 @@ public class RemotingCommand {
 
     /**
      * 重新获取传输唯一标识
+     *
      * @return
      */
     public static int createNewRequestId() {
@@ -329,6 +338,7 @@ public class RemotingCommand {
 
     /**
      * 将extFilds 数据映射到header 里面
+     *
      * @param classHeader
      * @return
      * @throws RemotingCommandException
@@ -400,6 +410,7 @@ public class RemotingCommand {
 
     /**
      * 获取某个头部类对应的字段集合
+     *
      * @param classHeader
      * @return
      */
@@ -417,6 +428,7 @@ public class RemotingCommand {
 
     /**
      * 判断对象是否允许为空
+     *
      * @param field
      * @return
      */
@@ -432,6 +444,7 @@ public class RemotingCommand {
 
     /**
      * 获取字段的名称
+     *
      * @param clazz
      * @return
      */
@@ -449,6 +462,7 @@ public class RemotingCommand {
 
     /**
      * 加密
+     *
      * @return
      */
     public ByteBuffer encode() {
@@ -487,6 +501,7 @@ public class RemotingCommand {
 
     /**
      * 头部编码
+     *
      * @return
      */
     private byte[] headerEncode() {
@@ -531,6 +546,7 @@ public class RemotingCommand {
 
     /**
      * 头部编码, 只包含头部
+     *
      * @return
      */
     public ByteBuffer encodeHeader() {

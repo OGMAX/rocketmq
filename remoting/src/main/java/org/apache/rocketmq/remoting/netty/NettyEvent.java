@@ -18,12 +18,22 @@ package org.apache.rocketmq.remoting.netty;
 
 import io.netty.channel.Channel;
 
+/**
+ * 事件驱动,
+ * 当前程序会根据事件驱动状态执行, ChannelEventListener 对应的方法
+ */
 public class NettyEvent {
     /**
-     * NettyEvent 事件状态
+     *当前channel状态
      */
     private final NettyEventType type;
+    /**
+     * 远程地址
+     */
     private final String remoteAddr;
+    /**
+     * 对应channel
+     */
     private final Channel channel;
 
     public NettyEvent(NettyEventType type, String remoteAddr, Channel channel) {

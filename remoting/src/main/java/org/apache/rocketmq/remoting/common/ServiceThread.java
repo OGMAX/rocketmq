@@ -25,21 +25,26 @@ import org.slf4j.LoggerFactory;
 public abstract class ServiceThread implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(RemotingHelper.ROCKETMQ_REMOTING);
 
+    /**
+     * 等待过期时间
+     */
     private static final long JOIN_TIME = 90 * 1000;
 
-    /**
-     * 内部线程
-     */
     protected final Thread thread;
+
     /**
-     * 是否调用
+     * 调用状态
      */
     protected volatile boolean hasNotified = false;
+
     /**
-     * 线程是否已经停止了
+     * 停止状态
      */
     protected volatile boolean stopped = false;
 
+    /**
+     * 构造器
+     */
     public ServiceThread() {
         this.thread = new Thread(this, this.getServiceName());
     }
@@ -51,23 +56,28 @@ public abstract class ServiceThread implements Runnable {
     public abstract String getServiceName();
 
     /**
-     * 开启线程
+     * 线程启动方法
      */
     public void start() {
         this.thread.start();
     }
 
     /**
-     * 关闭线程
+     * 非中断式,关闭
      */
     public void shutdown() {
         this.shutdown(false);
     }
 
+    /**
+     * 关闭线程
+     * @param interrupt
+     */
     public void shutdown(final boolean interrupt) {
         this.stopped = true;
         log.info("shutdown thread " + this.getServiceName() + " interrupt " + interrupt);
         synchronized (this) {
+            // 唤醒当前线程
             if (!this.hasNotified) {
                 this.hasNotified = true;
                 this.notify();
@@ -75,6 +85,7 @@ public abstract class ServiceThread implements Runnable {
         }
 
         try {
+            // 中断线程
             if (interrupt) {
                 this.thread.interrupt();
             }

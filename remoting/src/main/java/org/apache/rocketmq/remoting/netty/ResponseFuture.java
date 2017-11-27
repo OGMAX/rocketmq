@@ -27,14 +27,32 @@ import org.apache.rocketmq.remoting.protocol.RemotingCommand;
  * 回调核心处理类
  */
 public class ResponseFuture {
+    /**
+     * 消息唯一标示
+     */
     private final int opaque;
+    /**
+     * 超时时间
+     */
     private final long timeoutMillis;
+    /**
+     * 回调
+     */
     private final InvokeCallback invokeCallback;
+    /**
+     * 开始时间戳
+     */
     private final long beginTimestamp = System.currentTimeMillis();
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
 
+    /**
+     * 信号量
+     */
     private final SemaphoreReleaseOnlyOnce once;
 
+    /**
+     * 执行一次标识
+     */
     private final AtomicBoolean executeCallbackOnlyOnce = new AtomicBoolean(false);
     private volatile RemotingCommand responseCommand;
     private volatile boolean sendRequestOK = true;
@@ -50,28 +68,46 @@ public class ResponseFuture {
 
     public void executeInvokeCallback() {
         if (invokeCallback != null) {
+            // 确保只执行一次
             if (this.executeCallbackOnlyOnce.compareAndSet(false, true)) {
                 invokeCallback.operationComplete(this);
             }
         }
     }
 
+    /**
+     * 释放信号量
+     */
     public void release() {
         if (this.once != null) {
             this.once.release();
         }
     }
 
+    /**
+     * 判断是否过期
+     * @return
+     */
     public boolean isTimeout() {
         long diff = System.currentTimeMillis() - this.beginTimestamp;
         return diff > this.timeoutMillis;
     }
 
+    /**
+     * 等待响应
+     * @param timeoutMillis
+     * @return
+     * @throws InterruptedException
+     */
     public RemotingCommand waitResponse(final long timeoutMillis) throws InterruptedException {
         this.countDownLatch.await(timeoutMillis, TimeUnit.MILLISECONDS);
         return this.responseCommand;
     }
 
+    /**
+     * 添加Response
+     * @param responseCommand
+     */
     public void putResponse(final RemotingCommand responseCommand) {
         this.responseCommand = responseCommand;
         this.countDownLatch.countDown();
